@@ -17,19 +17,41 @@ Aplicar principios SOLID
 
 El proyecto está dividido en tres capas principales:
 
-📦 project-root
- ┣ 📂 domain
- ┣ 📂 usecase
- ┣ 📂 infrastructure
- ┗ 📂 application (opcional - entrypoints/config)
+🏗️ Estructura del Proyecto
+src/main/java/com/template/projectCleanArquitecture
+📦 projectCleanArquitecture
+┣ 📂 application
+┃ ┗ 📂 usecase
+┣ 📂 domain
+┃ ┣ 📂 Enums
+┃ ┣ 📂 exceptions
+┃ ┣ 📂 gateways
+┃ ┣ 📂 model
+┃ ┣ 📂 ports
+┃ ┣ 📂 repository
+┃ ┗ 📂 service
+┣ 📂 infrastructure
+┃ ┣ 📂 config
+┃ ┣ 📂 driven_adapters
+┃ ┣ 📂 entry_points
+┃ ┗ 📂 mappers
+┣ 📂 shared
+┃ ┗ 📂 utils
+┗ 📜 ProjectCleanArquitectureApplication.java
+
+
 1. 🧠 Domain (Dominio)
 
 Contiene la lógica pura del negocio.
 
-Entidades
-Value Objects
-Reglas de negocio
-Interfaces (puertos)
+Incluye:
+model: entidades del dominio
+Enums: constantes del negocio
+exceptions: excepciones personalizadas
+repository: interfaces de persistencia
+ports: contratos de entrada/salida
+service: lógica de negocio pura
+gateways: comunicación abstracta con externos
 
 ❌ No depende de ninguna otra capa
 ✅ Es el núcleo del sistema
@@ -70,10 +92,20 @@ public class CreateUserUseCase {
 
 Implementaciones técnicas y acceso a servicios externos.
 
-Base de datos (JPA, JDBC, etc.)
+Implementa los detalles técnicos.
+
+Incluye:
+config: configuración de Spring
+driven_adapters: acceso a BD, APIs externas
+entry_points: controladores REST
+mappers: conversión DTO ↔ dominio
+
+Aquí vive todo lo que depende de frameworks:
+
+Spring Boot
+JPA / JDBC
 APIs externas
-Configuración de Spring
-Adaptadores
+
 
 Depende de usecase y domain
 
@@ -110,19 +142,32 @@ public class UserController {
     }
 }
 🔄 Flujo de Dependencias
-Infrastructure ➝ UseCase ➝ Domain
-Las dependencias siempre apuntan hacia el dominio
+Infrastructure ➝ Application ➝ Domain
+
+✔ Siempre hacia adentro
+✔ Uso de interfaces para desacoplar
+
 Se usan interfaces (puertos) para desacoplar
+
 🧪 Testing
-domain: pruebas unitarias puras
-usecase: pruebas con mocks
-infrastructure: pruebas de integración
-📦 Tecnologías sugeridas
+src/test/java/com/template/projectCleanArquitecture
+Pruebas unitarias para dominio
+Pruebas de casos de uso con mocks
+Pruebas de integración en infraestructura
+
+⚙️ Configuración
+
+Archivo principal:
+
+src/main/resources/application.properties
+
+🛠️ Tecnologías
 Java 17+
 Spring Boot
-Maven / Gradle
-PostgreSQL / MySQL
-JUnit + Mockito
+Maven
+JDBC / JPA
+PostgreSQL (opcional)
+
 📌 Principios aplicados
 SOLID
 Inversión de dependencias
@@ -135,19 +180,20 @@ Definir tus entidades en domain
 Crear casos de uso en usecase
 Implementar adaptadores en infrastructure
 Exponer endpoints en application
-📄 Ejemplo de estructura real
-com.example.project
- ┣ 📂 domain
- ┃ ┣ 📂 model
- ┃ ┗ 📂 repository
- ┣ 📂 usecase
- ┃ ┗ 📂 user
- ┣ 📂 infrastructure
- ┃ ┣ 📂 persistence
- ┃ ┗ 📂 config
- ┗ 📂 application
-   ┗ 📂 controller
-📬 Contribuciones
+
+🧱 Ejemplo de Flujo
+entry_points recibe request
+Llama a usecase
+usecase usa repository (interfaz)
+driven_adapter implementa esa interfaz
+Se retorna respuesta
+
+
+📬 Contribución
+Fork del proyecto
+Crear rama (feature/nueva-funcionalidad)
+Commit
+Pull Request
 
 Si deseas mejorar esta plantilla:
 
